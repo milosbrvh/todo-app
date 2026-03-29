@@ -48,36 +48,38 @@ function App() {
 >
   {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
 </button>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <input
-          value={tekst}
-          onChange={(e) => setTekst(e.target.value)}
-          placeholder="Unesi zadatak"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") dodajZadatak();
-          }}
-          style={{
-            padding: "10px",
-            flex: 1,
-            borderRadius: "5px",
-            border: "1px solid #ccc"
-          }}
-        />
+      <div>
+  <input
+    value={tekst}
+    onChange={(e) => setTekst(e.target.value)}
+    placeholder="Unesi zadatak"
+    onKeyDown={(e) => {
+      if (e.key === "Enter") dodajZadatak();
+    }}
+    style={{
+      padding: "10px",
+      width: "100%",
+      borderRadius: "5px",
+      border: "1px solid #ccc",
+      marginBottom: "10px"
+    }}
+  />
 
-        <button
-          onClick={dodajZadatak}
-          style={{
-            padding: "10px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          Dodaj
-        </button>
-      </div>
+  <button
+    onClick={dodajZadatak}
+    style={{
+      width: "100%",
+      padding: "10px",
+      backgroundColor: "#4CAF50",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer"
+    }}
+  >
+    Dodaj
+  </button>
+</div>
 
       {/* FILTER */}
       <div style={{ marginTop: "10px", textAlign: "center" }}>
