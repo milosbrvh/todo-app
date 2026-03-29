@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 function App() {
   const [tekst, setTekst] = useState("");
+  const [filter, setFilter] = useState("svi");
+
   const [lista, setLista] = useState(() => {
     const sacuvano = localStorage.getItem("lista");
     return sacuvano ? JSON.parse(sacuvano) : [];
@@ -36,9 +38,7 @@ function App() {
           onChange={(e) => setTekst(e.target.value)}
           placeholder="Unesi zadatak"
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              dodajZadatak();
-            }
+            if (e.key === "Enter") dodajZadatak();
           }}
           style={{
             padding: "10px",
@@ -66,56 +66,67 @@ function App() {
         </button>
       </div>
 
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {lista.map((item, index) => (
-          <li
-            key={index}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              backgroundColor: "white",
-              padding: "10px",
-              marginTop: "10px",
-              borderRadius: "5px",
-              transition: "0.3s"
-            }}
-          >
-            <span
-              onClick={() => {
-                const novaLista = [...lista];
-                novaLista[index].zavrsen = !novaLista[index].zavrsen;
-                setLista(novaLista);
-              }}
-              style={{
-                textDecoration: item.zavrsen ? "line-through" : "none",
-                cursor: "pointer"
-              }}
-            >
-              {item.tekst}
-            </span>
+      {/* FILTER */}
+      <div style={{ marginTop: "10px", textAlign: "center" }}>
+        <button onClick={() => setFilter("svi")}>Svi</button>
+        <button onClick={() => setFilter("aktivni")} style={{ margin: "0 5px" }}>
+          Aktivni
+        </button>
+        <button onClick={() => setFilter("zavrseni")}>Završeni</button>
+      </div>
 
-            <button
-              onClick={() => {
-                const novaLista = lista.filter((_, i) => i !== index);
-                setLista(novaLista);
-              }}
+      <ul style={{ listStyle: "none", padding: 0 }}>
+        {lista
+          .filter((item) => {
+            if (filter === "aktivni") return !item.zavrsen;
+            if (filter === "zavrseni") return item.zavrsen;
+            return true;
+          })
+          .map((item, index) => (
+            <li
+              key={index}
               style={{
-                backgroundColor: "red",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                padding: "5px 10px",
-                transition: "0.3s"
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                backgroundColor: "white",
+                padding: "10px",
+                marginTop: "10px",
+                borderRadius: "5px"
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#cc0000")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "red")}
             >
-              X
-            </button>
-          </li>
-        ))}
+              <span
+                onClick={() => {
+                  const novaLista = [...lista];
+                  novaLista[index].zavrsen = !novaLista[index].zavrsen;
+                  setLista(novaLista);
+                }}
+                style={{
+                  textDecoration: item.zavrsen ? "line-through" : "none",
+                  cursor: "pointer"
+                }}
+              >
+                {item.tekst}
+              </span>
+
+              <button
+                onClick={() => {
+                  const novaLista = lista.filter((_, i) => i !== index);
+                  setLista(novaLista);
+                }}
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  padding: "5px 10px"
+                }}
+              >
+                X
+              </button>
+            </li>
+          ))}
       </ul>
     </div>
   );
