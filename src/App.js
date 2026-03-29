@@ -5,6 +5,9 @@ function App() {
   const [filter, setFilter] = useState("svi");
   const [editIndex, setEditIndex] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [kategorija, setKategorija] = useState("work");
+  const [prioritet, setPrioritet] = useState("low");
+  const [search, setSearch] = useState("");
 
   const [lista, setLista] = useState(() => {
     const sacuvano = localStorage.getItem("lista");
@@ -15,21 +18,20 @@ function App() {
     localStorage.setItem("lista", JSON.stringify(lista));
   }, [lista]);
 
-  const [prioritet, setPrioritet] = useState("low");
+  const dodajZadatak = () => {
+    if (tekst === "") return;
 
-const dodajZadatak = () => {
-  if (tekst === "") return;
+    const novi = {
+      tekst: tekst,
+      zavrsen: false,
+      datum: new Date().toLocaleString(),
+      prioritet: prioritet,
+      kategorija: kategorija
+    };
 
-  const novi = {
-    tekst: tekst,
-    zavrsen: false,
-    datum: new Date().toLocaleString(),
-    prioritet: prioritet
+    setLista([...lista, novi]);
+    setTekst("");
   };
-
-  setLista([...lista, novi]);
-  setTekst("");
-};
 
   return (
     <div
@@ -61,38 +63,44 @@ const dodajZadatak = () => {
         {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
       </button>
 
-   <div>
-  <select
-    value={prioritet}
-    onChange={(e) => setPrioritet(e.target.value)}
-    style={{
-      width: "100%",
-      padding: "10px",
-      marginBottom: "10px",
-      borderRadius: "5px"
-    }}
-  >
-    <option value="low">Low</option>
-    <option value="medium">Medium</option>
-    <option value="high">High</option>
-  </select>
+      {/* INPUT */}
+      <div>
+        <select
+          value={prioritet}
+          onChange={(e) => setPrioritet(e.target.value)}
+          style={{ width: "100%", padding: "10px", marginBottom: "10px", borderRadius: "5px" }}
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
 
-  <input
-    value={tekst}
-    onChange={(e) => setTekst(e.target.value)}
-    placeholder="Unesi zadatak"
-    onKeyDown={(e) => {
-      if (e.key === "Enter") dodajZadatak();
-    }}
-    style={{
-     padding: "10px",
-     width: "100%",
-     boxSizing: "border-box",
-     borderRadius: "5px",
-     border: "1px solid #ccc",
-     marginBottom: "10px"
-     }}
-    />
+        <select
+          value={kategorija}
+          onChange={(e) => setKategorija(e.target.value)}
+          style={{ width: "100%", padding: "10px", marginBottom: "10px", borderRadius: "5px" }}
+        >
+          <option value="work">Work</option>
+          <option value="personal">Personal</option>
+        </select>
+
+        <input
+          value={tekst}
+          onChange={(e) => setTekst(e.target.value)}
+          placeholder="Unesi zadatak"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") dodajZadatak();
+          }}
+          style={{
+            padding: "10px",
+            width: "100%",
+            boxSizing: "border-box",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            marginBottom: "10px"
+          }}
+        />
+
         <button
           onClick={dodajZadatak}
           style={{
@@ -116,6 +124,20 @@ const dodajZadatak = () => {
         <button onClick={() => setFilter("zavrseni")}>Završeni</button>
       </div>
 
+      {/* SEARCH */}
+      <input
+        placeholder="Pretraga..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "10px",
+          marginTop: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc"
+        }}
+      />
+
       {/* OBRIŠI */}
       <button
         onClick={() => setLista([])}
@@ -137,6 +159,7 @@ const dodajZadatak = () => {
         Završeno: {lista.filter(item => item.zavrsen).length} / {lista.length}
       </p>
 
+      {/* LISTA */}
       <ul style={{ listStyle: "none", padding: 0 }}>
         {lista
           .filter((item) => {
@@ -144,6 +167,9 @@ const dodajZadatak = () => {
             if (filter === "zavrseni") return item.zavrsen;
             return true;
           })
+          .filter((item) =>
+            item.tekst.toLowerCase().includes(search.toLowerCase())
+          )
           .map((item, index) => (
             <li
               key={index}
@@ -152,116 +178,74 @@ const dodajZadatak = () => {
                 justifyContent: "space-between",
                 alignItems: "center",
                 backgroundColor:
-                item.prioritet === "high"
-               ? "#ff4d4d"
-               : item.prioritet === "medium"
-               ? "#ffd11a"
-               : darkMode
-               ? "#333"
-               : "white",
+                  item.prioritet === "high"
+                    ? "#ff4d4d"
+                    : item.prioritet === "medium"
+                    ? "#ffd11a"
+                    : darkMode
+                    ? "#333"
+                    : "white",
+                borderLeft:
+                  item.kategorija === "work"
+                    ? "5px solid #2196F3"
+                    : "5px solid #9C27B0",
                 color: darkMode ? "white" : "black",
                 padding: "10px",
                 marginTop: "10px",
-                borderRadius: "5px",
-                transition: "0.2s",
-                transform: "scale(1)"
+                borderRadius: "5px"
               }}
-              onMouseDown={(e) =>
-                (e.currentTarget.style.transform = "scale(0.97)")
-              }
-              onMouseUp={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
             >
               {editIndex === index ? (
-  <>
-    <input
-      value={item.tekst}
-      onChange={(e) => {
-        const novaLista = [...lista];
-        novaLista[index].tekst = e.target.value;
-        setLista(novaLista);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") setEditIndex(null);
-      }}
-      autoFocus
-      style={{
-        flex: 1,
-        marginRight: "10px",
-        padding: "5px"
-      }}
-    />
+                <>
+                  <input
+                    value={item.tekst}
+                    onChange={(e) => {
+                      const novaLista = [...lista];
+                      novaLista[index].tekst = e.target.value;
+                      setLista(novaLista);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") setEditIndex(null);
+                    }}
+                    autoFocus
+                    style={{ flex: 1, marginRight: "10px", padding: "5px" }}
+                  />
+                  <button onClick={() => setEditIndex(null)}>✔</button>
+                </>
+              ) : (
+                <>
+                  <span
+                    onClick={() => {
+                      const novaLista = [...lista];
+                      novaLista[index].zavrsen = !novaLista[index].zavrsen;
+                      setLista(novaLista);
+                    }}
+                    style={{
+                      textDecoration: item.zavrsen ? "line-through" : "none",
+                      cursor: "pointer",
+                      flex: 1
+                    }}
+                  >
+                    {item.tekst}
+                    <p style={{ fontSize: "12px", margin: 0 }}>
+                      {item.datum}
+                    </p>
+                  </span>
 
-    <button
-      onClick={() => setEditIndex(null)}
-      style={{
-        backgroundColor: "#4CAF50",
-        color: "white",
-        border: "none",
-        borderRadius: "5px",
-        padding: "5px 10px",
-        marginRight: "5px"
-      }}
-    >
-      ✔
-    </button>
-  </>
-) : (
-  <>
-  <span
-    onClick={() => {
-      const novaLista = [...lista];
-      novaLista[index].zavrsen = !novaLista[index].zavrsen;
-      setLista(novaLista);
-    }}
-    style={{
-      textDecoration: item.zavrsen ? "line-through" : "none",
-      cursor: "pointer",
-      flex: 1
-    }}
-   >
-    {item.tekst}
-    <p style={{ fontSize: "12px", margin: 0 }}>
-    {item.datum}
-    </p>
-  </span>
+                  <button onClick={() => setEditIndex(index)}>✏️</button>
 
-  <button
-    onClick={() => setEditIndex(index)}
-    style={{
-      backgroundColor: "#2196F3",
-      color: "white",
-      border: "none",
-      borderRadius: "5px",
-      padding: "5px 10px",
-      marginRight: "5px",
-      cursor: "pointer"
-    }}
-  >
-    ✏️
-  </button>
-
-  <button
-    onClick={() => {
-      const novaLista = lista.filter((_, i) => i !== index);
-      setLista(novaLista);
-    }}
-    style={{
-      backgroundColor: "red",
-      color: "white",
-      border: "none",
-      borderRadius: "5px",
-      padding: "5px 10px",
-      cursor: "pointer"
-    }}
-  >
-    X
-  </button>
-</>
-        )}
-      </li>
-    ))}
+                  <button
+                    onClick={() => {
+                      const novaLista = lista.filter((_, i) => i !== index);
+                      setLista(novaLista);
+                    }}
+                  >
+                    X
+                  </button>
+                </>
+              )}
+            </li>
+          ))}
       </ul>
     </div>
   );
