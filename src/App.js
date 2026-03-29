@@ -4,9 +4,9 @@ function App() {
   const [tekst, setTekst] = useState("");
   const [filter, setFilter] = useState("svi");
   const [editIndex, setEditIndex] = useState(null);
-
+  const [darkMode, setDarkMode] = useState(false);
   const [lista, setLista] = useState(() => {
-    const sacuvano = localStorage.getItem("lista");
+  const sacuvano = localStorage.getItem("lista");
     return sacuvano ? JSON.parse(sacuvano) : [];
   });
 
@@ -22,17 +22,32 @@ function App() {
 
   return (
     <div
-      style={{
-        padding: "20px",
-        maxWidth: "400px",
-        margin: "50px auto",
-        backgroundColor: "#f5f5f5",
-        borderRadius: "10px",
-        boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+     style={{
+  padding: "20px",
+  maxWidth: "400px",
+  margin: "50px auto",
+  backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
+  color: darkMode ? "white" : "black",
+  borderRadius: "10px",
+  boxShadow: "0 0 10px rgba(0,0,0,0.1)"
       }}
     >
       <h1 style={{ textAlign: "center" }}>To-Do Lista</h1>
-
+<button
+  onClick={() => setDarkMode(!darkMode)}
+  style={{
+    marginBottom: "10px",
+    width: "100%",
+    padding: "10px",
+    backgroundColor: darkMode ? "#444" : "#ddd",
+    color: darkMode ? "white" : "black",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer"
+  }}
+>
+  {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
+</button>
       <div style={{ display: "flex", gap: "10px" }}>
         <input
           value={tekst}
@@ -146,7 +161,8 @@ function App() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: "white",
+                backgroundColor: darkMode ? "#333" : "white",
+                color: darkMode ? "white" : "black",
                 padding: "10px",
                 marginTop: "10px",
                 borderRadius: "5px"
