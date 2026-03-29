@@ -18,27 +18,65 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "400px", margin: "auto" }}>
-      <h1>To-Do lista</h1>
+    <div
+      style={{
+        padding: "20px",
+        maxWidth: "400px",
+        margin: "50px auto",
+        backgroundColor: "#f5f5f5",
+        borderRadius: "10px",
+        boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+      }}
+    >
+      <h1 style={{ textAlign: "center" }}>To-Do Lista</h1>
 
-      <input
-        value={tekst}
-        onChange={(e) => setTekst(e.target.value)}
-        placeholder="Unesi zadatak"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            dodajZadatak();
-          }
-        }}
-      />
+      <div style={{ display: "flex", gap: "10px" }}>
+        <input
+          value={tekst}
+          onChange={(e) => setTekst(e.target.value)}
+          placeholder="Unesi zadatak"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              dodajZadatak();
+            }
+          }}
+          style={{
+            padding: "10px",
+            flex: 1,
+            borderRadius: "5px",
+            border: "1px solid #ccc"
+          }}
+        />
 
-      <button onClick={dodajZadatak} style={{ marginLeft: "10px" }}>
-        Dodaj
-      </button>
+        <button
+          onClick={dodajZadatak}
+          style={{
+            padding: "10px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Dodaj
+        </button>
+      </div>
 
-      <ul>
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {lista.map((item, index) => (
-          <li key={index}>
+          <li
+            key={index}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              backgroundColor: "white",
+              padding: "10px",
+              marginTop: "10px",
+              borderRadius: "5px"
+            }}
+          >
             <span
               onClick={() => {
                 const novaLista = [...lista];
@@ -58,8 +96,16 @@ function App() {
                 const novaLista = lista.filter((_, i) => i !== index);
                 setLista(novaLista);
               }}
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                padding: "5px 10px"
+              }}
             >
-              ❌
+              X
             </button>
           </li>
         ))}
