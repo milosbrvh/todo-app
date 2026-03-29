@@ -56,8 +56,11 @@ function App() {
             color: "white",
             border: "none",
             borderRadius: "5px",
-            cursor: "pointer"
+            cursor: "pointer",
+            transition: "0.3s"
           }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
         >
           Dodaj
         </button>
@@ -74,7 +77,8 @@ function App() {
               backgroundColor: "white",
               padding: "10px",
               marginTop: "10px",
-              borderRadius: "5px"
+              borderRadius: "5px",
+              transition: "0.3s"
             }}
           >
             <span
@@ -102,8 +106,11 @@ function App() {
                 border: "none",
                 borderRadius: "5px",
                 cursor: "pointer",
-                padding: "5px 10px"
+                padding: "5px 10px",
+                transition: "0.3s"
               }}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#cc0000")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "red")}
             >
               X
             </button>
