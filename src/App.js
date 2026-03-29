@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 function App() {
   const [tekst, setTekst] = useState("");
   const [filter, setFilter] = useState("svi");
+  const [editIndex, setEditIndex] = useState(null);
 
   const [lista, setLista] = useState(() => {
     const sacuvano = localStorage.getItem("lista");
@@ -56,11 +57,8 @@ function App() {
             color: "white",
             border: "none",
             borderRadius: "5px",
-            cursor: "pointer",
-            transition: "0.3s"
+            cursor: "pointer"
           }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#4CAF50")}
         >
           Dodaj
         </button>
@@ -68,12 +66,71 @@ function App() {
 
       {/* FILTER */}
       <div style={{ marginTop: "10px", textAlign: "center" }}>
-        <button onClick={() => setFilter("svi")}>Svi</button>
-        <button onClick={() => setFilter("aktivni")} style={{ margin: "0 5px" }}>
+        <button
+          onClick={() => setFilter("svi")}
+          style={{
+            backgroundColor: filter === "svi" ? "#4CAF50" : "lightgray",
+            color: filter === "svi" ? "white" : "black",
+            marginRight: "5px",
+            border: "none",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Svi
+        </button>
+
+        <button
+          onClick={() => setFilter("aktivni")}
+          style={{
+            backgroundColor: filter === "aktivni" ? "#4CAF50" : "lightgray",
+            color: filter === "aktivni" ? "white" : "black",
+            marginRight: "5px",
+            border: "none",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
           Aktivni
         </button>
-        <button onClick={() => setFilter("zavrseni")}>Završeni</button>
+
+        <button
+          onClick={() => setFilter("zavrseni")}
+          style={{
+            backgroundColor: filter === "zavrseni" ? "#4CAF50" : "lightgray",
+            color: filter === "zavrseni" ? "white" : "black",
+            border: "none",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Završeni
+        </button>
       </div>
+
+      {/* OBRIŠI */}
+      <button
+        onClick={() => setLista([])}
+        style={{
+          marginTop: "10px",
+          width: "100%",
+          backgroundColor: "black",
+          color: "white",
+          border: "none",
+          padding: "10px",
+          borderRadius: "5px"
+        }}
+      >
+        Obriši sve
+      </button>
+
+      {/* BROJAČ */}
+      <p style={{ textAlign: "center", marginTop: "10px" }}>
+        Završeno: {lista.filter(item => item.zavrsen).length} / {lista.length}
+      </p>
 
       <ul style={{ listStyle: "none", padding: 0 }}>
         {lista
@@ -95,19 +152,41 @@ function App() {
                 borderRadius: "5px"
               }}
             >
-              <span
-                onClick={() => {
-                  const novaLista = [...lista];
-                  novaLista[index].zavrsen = !novaLista[index].zavrsen;
-                  setLista(novaLista);
-                }}
-                style={{
-                  textDecoration: item.zavrsen ? "line-through" : "none",
-                  cursor: "pointer"
-                }}
-              >
-                {item.tekst}
-              </span>
+              {editIndex === index ? (
+                <input
+                  value={item.tekst}
+                  onChange={(e) => {
+                    const novaLista = [...lista];
+                    novaLista[index].tekst = e.target.value;
+                    setLista(novaLista);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") setEditIndex(null);
+                  }}
+                  autoFocus
+                  style={{
+                    flex: 1,
+                    marginRight: "10px",
+                    padding: "5px"
+                  }}
+                />
+              ) : (
+                <span
+                  onDoubleClick={() => setEditIndex(index)}
+                  onClick={() => {
+                    const novaLista = [...lista];
+                    novaLista[index].zavrsen = !novaLista[index].zavrsen;
+                    setLista(novaLista);
+                  }}
+                  style={{
+                    textDecoration: item.zavrsen ? "line-through" : "none",
+                    cursor: "pointer",
+                    flex: 1
+                  }}
+                >
+                  {item.tekst}
+                </span>
+              )}
 
               <button
                 onClick={() => {
@@ -119,7 +198,6 @@ function App() {
                   color: "white",
                   border: "none",
                   borderRadius: "5px",
-                  cursor: "pointer",
                   padding: "5px 10px"
                 }}
               >
