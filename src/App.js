@@ -15,11 +15,21 @@ function App() {
     localStorage.setItem("lista", JSON.stringify(lista));
   }, [lista]);
 
-  const dodajZadatak = () => {
-    if (tekst === "") return;
-    setLista([...lista, { tekst: tekst, zavrsen: false }]);
-    setTekst("");
+  const [prioritet, setPrioritet] = useState("low");
+
+const dodajZadatak = () => {
+  if (tekst === "") return;
+
+  const novi = {
+    tekst: tekst,
+    zavrsen: false,
+    datum: new Date().toLocaleString(),
+    prioritet: prioritet
   };
+
+  setLista([...lista, novi]);
+  setTekst("");
+};
 
   return (
     <div
@@ -51,23 +61,38 @@ function App() {
         {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
       </button>
 
-      <div>
-        <input
-          value={tekst}
-          onChange={(e) => setTekst(e.target.value)}
-          placeholder="Unesi zadatak"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") dodajZadatak();
-          }}
-          style={{
-            padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            marginBottom: "10px"
-          }}
-        />
+   <div>
+  <select
+    value={prioritet}
+    onChange={(e) => setPrioritet(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "10px",
+      marginBottom: "10px",
+      borderRadius: "5px"
+    }}
+  >
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
 
+  <input
+    value={tekst}
+    onChange={(e) => setTekst(e.target.value)}
+    placeholder="Unesi zadatak"
+    onKeyDown={(e) => {
+      if (e.key === "Enter") dodajZadatak();
+    }}
+    style={{
+     padding: "10px",
+     width: "100%",
+     boxSizing: "border-box",
+     borderRadius: "5px",
+     border: "1px solid #ccc",
+     marginBottom: "10px"
+     }}
+    />
         <button
           onClick={dodajZadatak}
           style={{
@@ -126,7 +151,14 @@ function App() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor: darkMode ? "#333" : "white",
+                backgroundColor:
+                item.prioritet === "high"
+               ? "#ff4d4d"
+               : item.prioritet === "medium"
+               ? "#ffd11a"
+               : darkMode
+               ? "#333"
+               : "white",
                 color: darkMode ? "white" : "black",
                 padding: "10px",
                 marginTop: "10px",
@@ -142,58 +174,94 @@ function App() {
               }
             >
               {editIndex === index ? (
-                <input
-                  value={item.tekst}
-                  onChange={(e) => {
-                    const novaLista = [...lista];
-                    novaLista[index].tekst = e.target.value;
-                    setLista(novaLista);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") setEditIndex(null);
-                  }}
-                  autoFocus
-                  style={{
-                    flex: 1,
-                    marginRight: "10px",
-                    padding: "5px"
-                  }}
-                />
-              ) : (
-                <span
-                  onDoubleClick={() => setEditIndex(index)}
-                  onClick={() => {
-                    const novaLista = [...lista];
-                    novaLista[index].zavrsen = !novaLista[index].zavrsen;
-                    setLista(novaLista);
-                  }}
-                  style={{
-                    textDecoration: item.zavrsen ? "line-through" : "none",
-                    cursor: "pointer",
-                    flex: 1
-                  }}
-                >
-                  {item.tekst}
-                </span>
-              )}
+  <>
+    <input
+      value={item.tekst}
+      onChange={(e) => {
+        const novaLista = [...lista];
+        novaLista[index].tekst = e.target.value;
+        setLista(novaLista);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") setEditIndex(null);
+      }}
+      autoFocus
+      style={{
+        flex: 1,
+        marginRight: "10px",
+        padding: "5px"
+      }}
+    />
 
-              <button
-                onClick={() => {
-                  const novaLista = lista.filter((_, i) => i !== index);
-                  setLista(novaLista);
-                }}
-                style={{
-                  backgroundColor: "red",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  padding: "5px 10px"
-                }}
-              >
-                X
-              </button>
-            </li>
-          ))}
+    <button
+      onClick={() => setEditIndex(null)}
+      style={{
+        backgroundColor: "#4CAF50",
+        color: "white",
+        border: "none",
+        borderRadius: "5px",
+        padding: "5px 10px",
+        marginRight: "5px"
+      }}
+    >
+      ✔
+    </button>
+  </>
+) : (
+  <>
+  <span
+    onClick={() => {
+      const novaLista = [...lista];
+      novaLista[index].zavrsen = !novaLista[index].zavrsen;
+      setLista(novaLista);
+    }}
+    style={{
+      textDecoration: item.zavrsen ? "line-through" : "none",
+      cursor: "pointer",
+      flex: 1
+    }}
+   >
+    {item.tekst}
+    <p style={{ fontSize: "12px", margin: 0 }}>
+    {item.datum}
+    </p>
+  </span>
+
+  <button
+    onClick={() => setEditIndex(index)}
+    style={{
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      padding: "5px 10px",
+      marginRight: "5px",
+      cursor: "pointer"
+    }}
+  >
+    ✏️
+  </button>
+
+  <button
+    onClick={() => {
+      const novaLista = lista.filter((_, i) => i !== index);
+      setLista(novaLista);
+    }}
+    style={{
+      backgroundColor: "red",
+      color: "white",
+      border: "none",
+      borderRadius: "5px",
+      padding: "5px 10px",
+      cursor: "pointer"
+    }}
+  >
+    X
+  </button>
+</>
+        )}
+      </li>
+    ))}
       </ul>
     </div>
   );
