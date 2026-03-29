@@ -5,8 +5,9 @@ function App() {
   const [filter, setFilter] = useState("svi");
   const [editIndex, setEditIndex] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+
   const [lista, setLista] = useState(() => {
-  const sacuvano = localStorage.getItem("lista");
+    const sacuvano = localStorage.getItem("lista");
     return sacuvano ? JSON.parse(sacuvano) : [];
   });
 
@@ -22,110 +23,72 @@ function App() {
 
   return (
     <div
-     style={{
-  padding: "20px",
-  maxWidth: "400px",
-  margin: "50px auto",
-  backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
-  color: darkMode ? "white" : "black",
-  borderRadius: "10px",
-  boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+      style={{
+        padding: "20px",
+        maxWidth: "400px",
+        margin: "50px auto",
+        backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
+        color: darkMode ? "white" : "black",
+        borderRadius: "10px",
+        boxShadow: "0 0 10px rgba(0,0,0,0.1)"
       }}
     >
       <h1 style={{ textAlign: "center" }}>To-Do Lista</h1>
-<button
-  onClick={() => setDarkMode(!darkMode)}
-  style={{
-    marginBottom: "10px",
-    width: "100%",
-    padding: "10px",
-    backgroundColor: darkMode ? "#444" : "#ddd",
-    color: darkMode ? "white" : "black",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer"
-  }}
->
-  {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
-</button>
-      <div>
-  <input
-    value={tekst}
-    onChange={(e) => setTekst(e.target.value)}
-    placeholder="Unesi zadatak"
-    onKeyDown={(e) => {
-      if (e.key === "Enter") dodajZadatak();
-    }}
-    style={{
-      padding: "10px",
-      width: "100%",
-      borderRadius: "5px",
-      border: "1px solid #ccc",
-      marginBottom: "10px"
-    }}
-  />
 
-  <button
-    onClick={dodajZadatak}
-    style={{
-      width: "100%",
-      padding: "10px",
-      backgroundColor: "#4CAF50",
-      color: "white",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer"
-    }}
-  >
-    Dodaj
-  </button>
-</div>
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        style={{
+          marginBottom: "10px",
+          width: "100%",
+          padding: "10px",
+          backgroundColor: darkMode ? "#444" : "#ddd",
+          color: darkMode ? "white" : "black",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer"
+        }}
+      >
+        {darkMode ? "Light mode ☀️" : "Dark mode 🌙"}
+      </button>
+
+      <div>
+        <input
+          value={tekst}
+          onChange={(e) => setTekst(e.target.value)}
+          placeholder="Unesi zadatak"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") dodajZadatak();
+          }}
+          style={{
+            padding: "10px",
+            width: "100%",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            marginBottom: "10px"
+          }}
+        />
+
+        <button
+          onClick={dodajZadatak}
+          style={{
+            width: "100%",
+            padding: "10px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Dodaj
+        </button>
+      </div>
 
       {/* FILTER */}
       <div style={{ marginTop: "10px", textAlign: "center" }}>
-        <button
-          onClick={() => setFilter("svi")}
-          style={{
-            backgroundColor: filter === "svi" ? "#4CAF50" : "lightgray",
-            color: filter === "svi" ? "white" : "black",
-            marginRight: "5px",
-            border: "none",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          Svi
-        </button>
-
-        <button
-          onClick={() => setFilter("aktivni")}
-          style={{
-            backgroundColor: filter === "aktivni" ? "#4CAF50" : "lightgray",
-            color: filter === "aktivni" ? "white" : "black",
-            marginRight: "5px",
-            border: "none",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          Aktivni
-        </button>
-
-        <button
-          onClick={() => setFilter("zavrseni")}
-          style={{
-            backgroundColor: filter === "zavrseni" ? "#4CAF50" : "lightgray",
-            color: filter === "zavrseni" ? "white" : "black",
-            border: "none",
-            padding: "5px 10px",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
-        >
-          Završeni
-        </button>
+        <button onClick={() => setFilter("svi")}>Svi</button>
+        <button onClick={() => setFilter("aktivni")}>Aktivni</button>
+        <button onClick={() => setFilter("zavrseni")}>Završeni</button>
       </div>
 
       {/* OBRIŠI */}
@@ -167,8 +130,16 @@ function App() {
                 color: darkMode ? "white" : "black",
                 padding: "10px",
                 marginTop: "10px",
-                borderRadius: "5px"
+                borderRadius: "5px",
+                transition: "0.2s",
+                transform: "scale(1)"
               }}
+              onMouseDown={(e) =>
+                (e.currentTarget.style.transform = "scale(0.97)")
+              }
+              onMouseUp={(e) =>
+                (e.currentTarget.style.transform = "scale(1)")
+              }
             >
               {editIndex === index ? (
                 <input
