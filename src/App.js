@@ -30,8 +30,10 @@ function App() {
      kategorija: kategorija
      };
 
-    setLista([...lista, novi]);
-    setTekst("");
+     setLista([...lista, novi]);
+     setTekst("");
+     setPrioritet("low");
+     setKategorija("work");
     };
 
   return (
@@ -216,24 +218,27 @@ function App() {
                 </>
               ) : (
                 <>
-                  <span
-                    onClick={() => {
-                      const novaLista = lista.map((el) =>
-                     el.id === item.id ? { ...el, zavrsen: !el.zavrsen } : el
-                     );
-                     setLista(novaLista);
-                     }}
-                    style={{
-                      textDecoration: item.zavrsen ? "line-through" : "none",
-                      cursor: "pointer",
-                      flex: 1
-                    }}
-                     >
-                    {item.tekst}
-                    <p style={{ fontSize: "12px", margin: 0 }}>
-                      {item.datum}
+                  <span style={{ flex: 1 }}>
+                   <strong
+                   onClick={() => {
+                   const novaLista = lista.map((el) =>
+                  el.id === item.id ? { ...el, zavrsen: !el.zavrsen } : el
+                  );
+                  setLista(novaLista);
+                  }}
+                  style={{
+                  textDecoration: item.zavrsen ? "line-through" : "none",
+                  cursor: "pointer",
+                  display: "block"
+                  }}
+                   >
+                  {item.tekst}
+                  </strong>
+
+                   <p style={{ fontSize: "12px", margin: 0 }}>
+                   {item.datum}
                      </p>
-                     </span>
+                      </span>
                      <button onClick={() => setEditId(item.id)}>✏️</button>
                      <button
                     onClick={() => {
