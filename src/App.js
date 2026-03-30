@@ -8,9 +8,9 @@ function App() {
   const [kategorija, setKategorija] = useState("work");
   const [prioritet, setPrioritet] = useState("low");
   const [search, setSearch] = useState("");
-
+  const [brisanjeId, setBrisanjeId] = useState(null);
   const [lista, setLista] = useState(() => {
-    const sacuvano = localStorage.getItem("lista");
+  const sacuvano = localStorage.getItem("lista");
     return sacuvano ? JSON.parse(sacuvano) : [];
   });
 
@@ -105,27 +105,28 @@ function App() {
         />
 
         <button
-          onClick={dodajZadatak}
-          onMouseOver={(e) => (e.target.style.opacity = "0.8")}
-          onMouseOut={(e) => (e.target.style.opacity = "1")}
-          style={{
-           width: "100%",
-          padding: "10px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-         cursor: "pointer",
-        transition: "0.2s"
-        }}
+         onClick={dodajZadatak}
+         disabled={tekst.trim() === ""}
+         onMouseOver={(e) => (e.target.style.opacity = "0.8")}
+         onMouseOut={(e) => (e.target.style.opacity = "1")}
+         style={{
+         width: "100%",
+         padding: "10px",
+         backgroundColor: tekst.trim() === "" ? "#999" : "#4CAF50",
+         color: "white",
+         border: "none",
+         borderRadius: "5px",
+         cursor: tekst.trim() === "" ? "not-allowed" : "pointer",
+         transition: "0.2s"
+         }}
         >
        Dodaj
-     </button>
+      </button>
       </div>
 
       {/* FILTER */}
      <div style={{ marginTop: "10px", textAlign: "center" }}>
-  <button
+     <button
     onClick={() => setFilter("svi")}
     onMouseOver={(e) => (e.target.style.opacity = "0.7")}
     onMouseOut={(e) => (e.target.style.opacity = "1")}
@@ -175,9 +176,9 @@ function App() {
       color: filter === "zavrseni" ? "white" : "black",
       transition: "0.2s"
     }}
-  >
+     >
     Završeni
-  </button>
+      </button>
       </div>
 
       {/* SEARCH */}
@@ -226,31 +227,40 @@ function App() {
           .filter((item) =>
             item.tekst.toLowerCase().includes(search.toLowerCase())
           )
+           .sort((a, b) => {
+           const prioritetOrder = { high: 3, medium: 2, low: 1 };
+           // prvo po prioritetu
+              if (prioritetOrder[b.prioritet] !== prioritetOrder[a.prioritet]) {
+              return prioritetOrder[b.prioritet] - prioritetOrder[a.prioritet];
+              }
+             // ako je isti prioritet → noviji prvo
+            return new Date(b.datum) - new Date(a.datum);
+           })
           .map((item) => (
             <li
-              key={item.id}
-              style={{
-                display: "flex",
+                 key={item.id}
+                 style={{
+                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                backgroundColor:
-                  item.prioritet === "high"
-                    ? "#ff4d4d"
-                    : item.prioritet === "medium"
-                    ? "#ffd11a"
-                    : darkMode
-                    ? "#333"
-                    : "white",
-                borderLeft:
-                  item.kategorija === "work"
-                    ? "5px solid #2196F3"
-                    : "5px solid #9C27B0",
-                color: darkMode ? "white" : "black",
-                padding: "10px",
-                marginTop: "10px",
-                borderRadius: "5px"
-              }}
-            >
+
+                opacity: brisanjeId === item.id ? 0 : 1,
+                transition: "opacity 0.3s ease",
+
+               backgroundColor:
+           item.prioritet === "high"
+        ? "#ff4d4d"
+        : item.prioritet === "medium"
+        ? "#ffd11a"
+        : darkMode
+        ? "#333"
+        : "white",
+
+    padding: "10px",
+    marginTop: "10px",
+    borderRadius: "5px"
+  }}
+>
               {editId === item.id ? (
                 <>
                   <input
@@ -294,14 +304,18 @@ function App() {
                       </span>
                      <button onClick={() => setEditId(item.id)}>✏️</button>
                      <button
-                    onClick={() => {
-                           
-                      const novaLista = lista.filter((el) => el.id !== item.id)
-                      setLista(novaLista);
-                    }}
-                  >
-                    X
-                  </button>
+                     onClick={() => {
+                     setBrisanjeId(item.id);
+
+                     setTimeout(() => {
+                     const novaLista = lista.filter((el) => el.id !== item.id);
+                     setLista(novaLista);
+                     setBrisanjeId(null);
+                     }, 300);
+                     }}
+                      >
+                      X
+                     </button>
                 </>
               )}
             </li>
