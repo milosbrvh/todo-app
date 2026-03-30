@@ -124,7 +124,7 @@ function App() {
       </div>
 
       {/* FILTER */}
-      <div style={{ marginTop: "10px", textAlign: "center" }}>
+     <div style={{ marginTop: "10px", textAlign: "center" }}>
   <button
     onClick={() => setFilter("svi")}
     onMouseOver={(e) => (e.target.style.opacity = "0.7")}
@@ -135,7 +135,8 @@ function App() {
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
-      backgroundColor: "#ddd",
+      backgroundColor: filter === "svi" ? "#4CAF50" : "#ddd",
+      color: filter === "svi" ? "white" : "black",
       transition: "0.2s"
     }}
   >
@@ -152,29 +153,31 @@ function App() {
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
-      backgroundColor: "#ddd",
+      backgroundColor: filter === "aktivni" ? "#4CAF50" : "#ddd",
+      color: filter === "aktivni" ? "white" : "black",
       transition: "0.2s"
     }}
-       >
-     Aktivni
-    </button>
+  >
+    Aktivni
+  </button>
 
-      <button
-      onClick={() => setFilter("zavrseni")}
-      onMouseOver={(e) => (e.target.style.opacity = "0.7")}
-      onMouseOut={(e) => (e.target.style.opacity = "1")}
-      style={{
+  <button
+    onClick={() => setFilter("zavrseni")}
+    onMouseOver={(e) => (e.target.style.opacity = "0.7")}
+    onMouseOut={(e) => (e.target.style.opacity = "1")}
+    style={{
       margin: "5px",
       padding: "8px 12px",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
-      backgroundColor: "#ddd",
+      backgroundColor: filter === "zavrseni" ? "#4CAF50" : "#ddd",
+      color: filter === "zavrseni" ? "white" : "black",
       transition: "0.2s"
-      }}
-      >
-      Završeni
-      </button>
+    }}
+  >
+    Završeni
+  </button>
       </div>
 
       {/* SEARCH */}
