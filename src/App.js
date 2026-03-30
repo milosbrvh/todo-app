@@ -19,7 +19,7 @@ function App() {
   }, [lista]);
 
   const dodajZadatak = () => {
-    if (tekst === "") return;
+    if (tekst.trim() === "") return;
 
     const novi = {
      id: Date.now(), 
@@ -171,7 +171,7 @@ function App() {
           .filter((item) =>
             item.tekst.toLowerCase().includes(search.toLowerCase())
           )
-          .map((item, index) => (
+          .map((item) => (
             <li
               key={item.id}
               style={{
