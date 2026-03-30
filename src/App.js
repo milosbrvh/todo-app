@@ -40,7 +40,7 @@ function App() {
     <div
       style={{
         padding: "20px",
-        maxWidth: "400px",
+        maxWidth: "500px",
         margin: "50px auto",
         backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
         color: darkMode ? "white" : "black",
@@ -106,25 +106,75 @@ function App() {
 
         <button
           onClick={dodajZadatak}
+          onMouseOver={(e) => (e.target.style.opacity = "0.8")}
+          onMouseOut={(e) => (e.target.style.opacity = "1")}
           style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}
+           width: "100%",
+          padding: "10px",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+         cursor: "pointer",
+        transition: "0.2s"
+        }}
         >
-          Dodaj
-        </button>
+       Dodaj
+     </button>
       </div>
 
       {/* FILTER */}
       <div style={{ marginTop: "10px", textAlign: "center" }}>
-        <button onClick={() => setFilter("svi")}>Svi</button>
-        <button onClick={() => setFilter("aktivni")}>Aktivni</button>
-        <button onClick={() => setFilter("zavrseni")}>Završeni</button>
+  <button
+    onClick={() => setFilter("svi")}
+    onMouseOver={(e) => (e.target.style.opacity = "0.7")}
+    onMouseOut={(e) => (e.target.style.opacity = "1")}
+    style={{
+      margin: "5px",
+      padding: "8px 12px",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      backgroundColor: "#ddd",
+      transition: "0.2s"
+    }}
+  >
+    Svi
+  </button>
+
+  <button
+    onClick={() => setFilter("aktivni")}
+    onMouseOver={(e) => (e.target.style.opacity = "0.7")}
+    onMouseOut={(e) => (e.target.style.opacity = "1")}
+    style={{
+      margin: "5px",
+      padding: "8px 12px",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      backgroundColor: "#ddd",
+      transition: "0.2s"
+    }}
+       >
+     Aktivni
+    </button>
+
+      <button
+      onClick={() => setFilter("zavrseni")}
+      onMouseOver={(e) => (e.target.style.opacity = "0.7")}
+      onMouseOut={(e) => (e.target.style.opacity = "1")}
+      style={{
+      margin: "5px",
+      padding: "8px 12px",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      backgroundColor: "#ddd",
+      transition: "0.2s"
+      }}
+      >
+      Završeni
+      </button>
       </div>
 
       {/* SEARCH */}
@@ -235,9 +285,9 @@ function App() {
                   {item.tekst}
                   </strong>
 
-                   <p style={{ fontSize: "12px", margin: 0 }}>
-                   {item.datum}
-                     </p>
+                   <p style={{ fontSize: "12px", margin: 0, color: "#888" }}>
+                    {item.datum}
+                    </p>
                       </span>
                      <button onClick={() => setEditId(item.id)}>✏️</button>
                      <button
