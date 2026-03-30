@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 function App() {
   const [tekst, setTekst] = useState("");
   const [filter, setFilter] = useState("svi");
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [kategorija, setKategorija] = useState("work");
   const [prioritet, setPrioritet] = useState("low");
@@ -22,16 +22,17 @@ function App() {
     if (tekst === "") return;
 
     const novi = {
-      tekst: tekst,
-      zavrsen: false,
-      datum: new Date().toLocaleString(),
-      prioritet: prioritet,
-      kategorija: kategorija
-    };
+     id: Date.now(), 
+     tekst: tekst,
+     zavrsen: false,
+     datum: new Date().toLocaleString(),
+     prioritet: prioritet,
+     kategorija: kategorija
+     };
 
     setLista([...lista, novi]);
     setTekst("");
-  };
+    };
 
   return (
     <div
@@ -172,7 +173,7 @@ function App() {
           )
           .map((item, index) => (
             <li
-              key={index}
+              key={item.id}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -195,48 +196,49 @@ function App() {
                 borderRadius: "5px"
               }}
             >
-              {editIndex === index ? (
+              {editId === item.id ? (
                 <>
                   <input
                     value={item.tekst}
                     onChange={(e) => {
-                      const novaLista = [...lista];
-                      novaLista[index].tekst = e.target.value;
-                      setLista(novaLista);
+                   const novaLista = lista.map((el) =>
+                   el.id === item.id ? { ...el, tekst: e.target.value } : el
+                   );
+                    setLista(novaLista);
                     }}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter") setEditIndex(null);
+                      if (e.key === "Enter") setEditId(null);
                     }}
                     autoFocus
                     style={{ flex: 1, marginRight: "10px", padding: "5px" }}
                   />
-                  <button onClick={() => setEditIndex(null)}>✔</button>
+                  <button onClick={() => setEditId(null)}>✔</button>
                 </>
               ) : (
                 <>
                   <span
                     onClick={() => {
-                      const novaLista = [...lista];
-                      novaLista[index].zavrsen = !novaLista[index].zavrsen;
-                      setLista(novaLista);
-                    }}
+                      const novaLista = lista.map((el) =>
+                     el.id === item.id ? { ...el, zavrsen: !el.zavrsen } : el
+                     );
+                     setLista(novaLista);
+                     }}
                     style={{
                       textDecoration: item.zavrsen ? "line-through" : "none",
                       cursor: "pointer",
                       flex: 1
                     }}
-                  >
+                     >
                     {item.tekst}
                     <p style={{ fontSize: "12px", margin: 0 }}>
                       {item.datum}
-                    </p>
-                  </span>
-
-                  <button onClick={() => setEditIndex(index)}>✏️</button>
-
-                  <button
+                     </p>
+                     </span>
+                     <button onClick={() => setEditId(item.id)}>✏️</button>
+                     <button
                     onClick={() => {
-                      const novaLista = lista.filter((_, i) => i !== index);
+                           
+                      const novaLista = lista.filter((el) => el.id !== item.id)
                       setLista(novaLista);
                     }}
                   >
