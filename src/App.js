@@ -191,7 +191,8 @@ function App() {
           padding: "10px",
           marginTop: "10px",
           borderRadius: "5px",
-          border: "1px solid #ccc"
+          border: "1px solid #ccc",
+          boxSizing: "border-box"
         }}
       />
 
